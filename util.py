@@ -6,7 +6,7 @@ def file_to_lines(filenames):
     for fn in filenames:
         file = open(fn, 'r')
         for line in file:
-            line = line.decode('utf8')
+            line = line.decode('utf8').replace('\n',"")
             if len(line)>0:
                 yield line
         file.close()
@@ -22,6 +22,26 @@ def make_charset(list_of_sentences):
 def line_toraw(line):
     import re
     return re.sub('[%s]' % re.escape(puncts+"\n".decode('utf8')), '', line)
+
+def decode_totext(rawtext, outputs, charstop):
+    assert len(rawtext) == len(outputs)
+    text = []
+    for i in range(len(rawtext)):
+        x = rawtext[i]
+        y = outputs[i]
+        if charstop: y = y[1:]
+        else: y = y[:-1]
+        line = ""
+        #print x, y, len(x), len(y)
+        assert len(x) == len(y)
+        for j in range(len(x)):
+            if y[j][0]:
+                if charstop: line = line + x[j] + "."
+                else: line = line + "."+x[j]
+            else: line = line + x[j]
+        #line = line + x[j]
+        text.append(line)
+    return text
 
 def seq_to_sparsevec(x,y,charset):
     #input: x, y: [char,...], [label,...]

@@ -46,6 +46,7 @@ for line in li:
 dataset_train = dataset[:cut1]
 dataset_validate = dataset[cut1:cut2]
 dataset_test = dataset[cut2:]
+li_generate = [util.line_toraw(line) for line in li[cut2:]]
 
 #sys.exit()
 
@@ -54,7 +55,7 @@ peak = 0
 int_num = 0
 
 mylstm = lstm.LSTM(n_input=len(dataset_test[0][0][0]),n_output=len(dataset_test[0][1][0]),n_memblock=hidden_size, lr=learning_rate)
-#mylstm.load("m50saving260")
+#mylstm.load("m50saving1740")
 
 try:
     while True:
@@ -75,7 +76,7 @@ try:
         tcost, act, aco, atp, p, r, f = mylstm.test(dataset_train)
         print "\t@@VALIDATE ON TRAIN@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", tcost
         print "\t@@VALIDATE ON TRAIN@@\tP, R, F:", p, r, f
-        print "\t@@VALIDATE ON TRAIN@@\tTotal in Gold:", datetime.datetime.now(), datetime.datetime.now()-starttime
+        print "\t@@VALIDATE ON TRAIN@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
 except KeyboardInterrupt:
     print 'Interrupted by user.'
 
@@ -90,7 +91,10 @@ print "\t@@VALIDATE ON TEST@@\tP, R, F:", p, r, f
 print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", datetime.datetime.now(), datetime.datetime.now()-starttime
 print "\tpeak =", peak
 
-print mylstm.generate(dataset_test)
+
+result = util.decode_totext(li_generate, mylstm.generate(dataset_test), charstop)
+for line in result:
+    print line.encode('utf8')
 
 
 

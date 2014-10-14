@@ -190,7 +190,7 @@ class LSTM:
         for ip, gold in data:
             #ips = sparse.basic.csc_from_dense(ip)
             op = self.generate_function(ip)
-            ops.append(ip,op)
+            ops.append(op)
         return ops
 
     def save(self, folder):
