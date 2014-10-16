@@ -11,7 +11,6 @@ material = 'data/sjw/*'
 #material = "data/sjw/A05*"
 size = 80
 trainportion = 0.9
-cut = int(size*trainportion)
 charstop = False # True means label attributes to previous char
 random.seed(101)
 " END OF PARAMETERS "
@@ -22,6 +21,7 @@ if len(args)>1:
     material = args[1]
     size = int(args[2])
     charstop = int(args[5])
+cut = int(size*trainportion)
 
 print "Material:", material
 print "Size:", size, "entries,", trainportion, "as training"
@@ -48,11 +48,12 @@ for line in closetestdata:
 # traindata shape: [[(x,y),(x,y), ...],[],[],...]
 # testdata shape: [([x1, x2, ...],[y1,y2,...]),([],[])]
 
-print "Start training...", datetime.datetime.now()
+stt = datetime.datetime.now()
+print "Start training...", stt
 hmmtagger = nt.hmm.HiddenMarkovModelTagger.train(traindata)
 
 
-print "Start testing...", datetime.datetime.now()
+print "################# Training took:", datetime.datetime.now()-stt
 results = []
 for line in testdata:
     x, yref = util.line_toseq(line, charstop)

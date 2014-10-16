@@ -11,7 +11,6 @@ material = 'data/sjw/*'
 #material = "data/sjw/A05*"
 size = 80
 trainportion = 0.9
-cut = int(size*trainportion)
 dictfile = 'data/vector/vectors300.txt'
 crfmethod = "l2sgd"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
 charstop = True # True means label attributes to previous char
@@ -26,15 +25,16 @@ if len(args)>1:
     dictfile = args[3]
     features = int(args[4])
     charstop = int(args[5])
+cut = int(size*trainportion)
 
 
-modelname = material.replace('/','').replace('*','')+str(size)+".m"
+modelname = material.replace('/','').replace('*','')+str(size)+str(charstop)+".m"
 
 print "Material:", material
 print "Size:", size, "entries,", trainportion, "as training"
 
-starttime = datetime.datetime.now()
-print "Starting Time:",starttime
+print datetime.datetime.now()
+
 # Prepare li: list of random lines
 if features > 1: vdict = util.readvec(dictfile)
 li = [line for line in util.file_to_lines(glob.glob(material))]
@@ -64,12 +64,16 @@ for t in traindata:
     trainer.append(x, y)
 
 trainer.select(crfmethod)
+print "!!!!before train", datetime.datetime.now()
 trainer.train(modelname)
+print "!!!!after train", datetime.datetime.now()
+
 
 tagger = pycrfsuite.Tagger()
 tagger.open(modelname)
 tagger.dump(modelname+".txt")
 
+print datetime.datetime.now()
 print "Start testing..."
 results = []
 for t in testdata:
@@ -89,7 +93,7 @@ print "Recall:", r
 print "*******************F1-score:", 2*p*r/(p+r)
 
 
-
+print datetime.datetime.now()
 print "Start closed testing..."
 results = []
 for t in traindata:
@@ -107,3 +111,4 @@ print "Total S in OUT:", tp+fp
 print "Presicion:", p
 print "Recall:", r
 print "*******************F1-score:", 2*p*r/(p+r)
+print datetime.datetime.now()
