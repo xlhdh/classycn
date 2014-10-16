@@ -20,7 +20,7 @@ args = sys.argv
 if len(args)>1:
     material = args[1]
     size = int(args[2])
-    charstop = int(args[5])
+    charstop = int(args[3])
 cut = int(size*trainportion)
 
 print "Material:", material
