@@ -122,7 +122,23 @@ def readvec(vecfilename):
             data[str(i)] = params[i]/base
         
         mydict[gram] = data
-        #mydict[gram] = params
+    #mydict[gram] = params
+    file.close()
+    return mydict
+
+def readvec2(vecfilename):
+    mydict = {}
+    file = open(vecfilename, 'r')
+    for line in file:
+        line = line.split()
+        gram = line[0].decode('utf8')
+        params = line[1:]
+        params = [float(p) for p in params]
+        data  = {}
+        for i in range(len(params)):
+            data[str(i)] = params[i]
+        
+        mydict[gram] = data
     file.close()
     return mydict
 

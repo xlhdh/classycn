@@ -12,7 +12,7 @@ material = 'data/sjw/*'
 size = 80
 trainportion = 0.9
 dictfile = 'data/vector/vectors300.txt'
-crfmethod = "l2sgd"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
+crfmethod = "ap"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
 charstop = True # True means label attributes to previous char
 features = 3 # 1=discrete; 2=vectors; 3=both
 random.seed(101)
@@ -36,7 +36,9 @@ print "Size:", size, "entries,", trainportion, "as training"
 print datetime.datetime.now()
 
 # Prepare li: list of random lines
-if features > 1: vdict = util.readvec(dictfile)
+if features > 1:
+    vdict = util.readvec(dictfile)
+    print "Dict:", dictfile
 li = [line for line in util.file_to_lines(glob.glob(material))]
 random.shuffle(li)
 li = li[:size]
@@ -59,11 +61,12 @@ testdata = data[cut:]
 trainer = pycrfsuite.Trainer()
 #print trainer.params()
 
-for t in traindata:
-    x, y = t
+while traindata:
+    x, y = traindata.pop()
     trainer.append(x, y)
 
 trainer.select(crfmethod)
+trainer.set('max_iterations',100000)
 print "!!!!before train", datetime.datetime.now()
 trainer.train(modelname)
 print "!!!!after train", datetime.datetime.now()
@@ -76,8 +79,8 @@ tagger.dump(modelname+".txt")
 print datetime.datetime.now()
 print "Start testing..."
 results = []
-for t in testdata:
-    x, yref = t
+while testdata:
+    x, yref = testdata.pop()
     yout = tagger.tag(x)
     results.append(util.eval(yref, yout, "S"))
 
