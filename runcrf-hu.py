@@ -24,7 +24,6 @@ if len(args)>1:
     modelname = args[5]
 
 print "Material:", material
-print "Size:", size, "entries,"
 
 print datetime.datetime.now()
 
