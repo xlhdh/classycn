@@ -53,10 +53,10 @@ print "Start testing..."
 results = []
 lines = []
 while data:
-    x, yref = data.pop()
-    yout = tagger.tag(x)
+    xseq, yref = data.pop()
+    yout = tagger.tag(xseq)
     results.append(util.eval(yref, yout, "S"))
-    lines.append(util.seq_to_line(x,yout,charstop))
+    lines.append(util.seq_to_line([x['gs0'] for x in xseq],yout,charstop))
 
 tp, fp, fn, tn = zip(*results)
 tp, fp, fn, tn = sum(tp), sum(fp), sum(fn), sum(tn)
