@@ -26,7 +26,9 @@ def line_toraw(line):
 def seq_to_line(x, y, charstop):
     assert len(x)==len(y)
     line = ""
-    for a, b in x, y:
+    while x:
+        a = x.pop(0)
+        b = y.pop(0)
         if b: b=','
         else: b=''
         if charstop: s = s+a+b
