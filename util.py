@@ -25,13 +25,13 @@ def line_toraw(line):
 
 def seq_to_line(x, y, charstop):
     assert len(x)==len(y)
-    line = ""
+    s = ""    
     for a, b in zip(x, y):
         if b: b=','
         else: b=''
         if charstop: s = s+a+b
         else: s = s+b+a
-    return line
+    return s
 
 def decode_totext(rawtext, outputs, charstop):
     assert len(rawtext) == len(outputs)
