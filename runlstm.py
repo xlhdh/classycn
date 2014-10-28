@@ -8,7 +8,7 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 100000
+size = 10000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
