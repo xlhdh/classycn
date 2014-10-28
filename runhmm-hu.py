@@ -62,6 +62,7 @@ for line in testdata:
     x, yref = util.line_toseq(line, charstop)
     out = hmmtagger.tag(x)
     _, yout = zip(*out)
+    yout = list(yout)
     results.append(util.eval(yref, yout, "S"))
     lines.append(util.seq_to_line(x,yout,charstop))
 tp, fp, fn, tn = zip(*results)
