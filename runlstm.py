@@ -24,6 +24,8 @@ random.seed(101)
 
 print "Material:", material
 print "Size:", size, "entries,", trainportion, "as training", validateportion, "as validation"
+print "Dense:", dense
+print "charstop:", charstop
 
 starttime = datetime.datetime.now()
 print "Starting Time:",starttime
@@ -38,15 +40,16 @@ if dense: vdict = util.lstmvec(dictfile)
 else: charset = util.make_charset(li)
 
 print "Preparing datasets..."
+li_generate = [util.line_toraw(line) for line in li[cut2:]]
+
 dataset = []
-for line in li:
-    x, y = util.line_toseq(line, charstop)
+while li:
+    x, y = util.line_toseq(li.pop(), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
 dataset_train = dataset[:cut1]
 dataset_validate = dataset[cut1:cut2]
 dataset_test = dataset[cut2:]
-li_generate = [util.line_toraw(line) for line in li[cut2:]]
 
 #sys.exit()
 
