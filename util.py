@@ -27,8 +27,6 @@ def seq_to_line(x, y, charstop):
     assert len(x)==len(y)
     s = ""
     for a, b in zip(x, y):
-        print a
-        print b
         if b =='S': b=','
         else: b=''
         if charstop: s = s+a+b

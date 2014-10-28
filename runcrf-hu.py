@@ -69,3 +69,5 @@ print "Presicion:", p
 print "Recall:", r
 print "*******************F1-score:", 2*p*r/(p+r)
 
+for line in lines:
+    print line.encode('utf8')
