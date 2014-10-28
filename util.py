@@ -28,7 +28,7 @@ def seq_to_line(x, y, charstop):
     line = ""
     print x
     print y
-    for a, b in x, y:
+    for a, b in zip(x, y):
         if b: b=','
         else: b=''
         if charstop: s = s+a+b
