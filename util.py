@@ -23,6 +23,16 @@ def line_toraw(line):
     import re
     return re.sub('[%s]' % re.escape(puncts+"\n".decode('utf8')), '', line)
 
+def seq_to_line(x, y, charstop):
+    assert len(x)==len(y)
+    line = ""
+    for a, b in x, y:
+        if b: b=','
+        else: b=''
+        if charstop: s = s+a+b
+        else: s = s+b+a
+    return line
+
 def decode_totext(rawtext, outputs, charstop):
     assert len(rawtext) == len(outputs)
     text = []
