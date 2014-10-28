@@ -1,0 +1,36 @@
+[yizhouhu@cibolo classycn]$ git pull
+remote: Counting objects: 4, done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 4 (delta 3), reused 4 (delta 3)
+Unpacking objects: 100% (4/4), done.
+From https://github.com/xlhdh/classycn
+   3281cd2..42cfdf8  master     -> origin/master
+Updating 3281cd2..42cfdf8
+Fast-forward
+ runcrf-hu.py | 2 ++
+ util.py      | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+[yizhouhu@cibolo classycn]$ ./crf-hu.sh 
+Material: qualitative/allover-sjw-gold.*
+2014-10-27 23:43:15.082899
+2014-10-27 23:43:30.076819
+Start testing...
+Total tokens in Test Set: 40087.0
+Total S in REF: 8141.0
+Total S in OUT: 8115.0
+Presicion: 0.898706099815
+Recall: 0.895835892397
+*******************F1-score: 0.897268700787
+
+
+Material: qualitative/allover-24s-gold.*
+2014-10-27 23:43:31.073336
+2014-10-27 23:44:19.348831
+Start testing...
+Total tokens in Test Set: 22119.0
+Total S in REF: 3357.0
+Total S in OUT: 4042.0
+Presicion: 0.460415635824
+Recall: 0.55436401549
+*******************F1-score: 0.50304095148
+

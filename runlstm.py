@@ -8,16 +8,16 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 80
-trainportion = 0.8
-validateportion = 0.1
+size = 100000
+trainportion = 0.9
+validateportion = 0.05
 cut1 = int(size*trainportion)
 cut2 = int(size*(trainportion+validateportion))
 dictfile = 'data/vector/sjwcbow50.txt'
-dense = True # 1 = dense, 0 = one-hot sparse
+dense = False # 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)
-validate_interval = 1000
+validate_interval = 10000
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
@@ -50,7 +50,7 @@ li_generate = [util.line_toraw(line) for line in li[cut2:]]
 
 #sys.exit()
 
-min_val_loss = 1000000 # very big
+min_val_loss = float("inf") # very big
 peak = 0
 int_num = 0
 
@@ -73,7 +73,7 @@ try:
             print int_num, "@@VALIDATE ON VALIDATE@@\t", "P, R, F:", p, r, f
             print int_num, "@@VALIDATE ON VALIDATE@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
         #print "Sample value: ", mylstm.generate([dt[0],])
-        tcost, act, aco, atp, p, r, f = mylstm.test(dataset_train)
+        tcost, act, aco, atp, p, r, f = mylstm.test(dataset_train[:100])
         print "\t@@VALIDATE ON TRAIN@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", tcost
         print "\t@@VALIDATE ON TRAIN@@\tP, R, F:", p, r, f
         print "\t@@VALIDATE ON TRAIN@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime

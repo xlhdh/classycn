@@ -1,0 +1,32 @@
+[yizhouhu@cibolo classycn]$ ./hmm-hu.sh 
+Material: data/sjw/*
+Size: 1000000 entries, 0.9 as training
+Starting Time: 2014-10-27 22:52:44.086000
+Reading from files...
+Prepare list of sequences...
+Start training... 2014-10-27 22:57:23.504764
+################# Training took: 0:08:20.512467
+Total tokens in Test Set: 40087.0
+Total S in REF: 8141.0
+Total S in OUT: 5384.0
+Presicion: 0.726597325409
+Recall: 0.480530647341
+F1-score: 0.578484288355
+
+
+Material: data/24s/*
+Size: 10000 entries, 0.9 as training
+Starting Time: 2014-10-27 23:06:17.645168
+Reading from files...
+Prepare list of sequences...
+Start training... 2014-10-27 23:06:23.053188
+################# Training took: 0:00:11.022188
+Total tokens in Test Set: 22119.0
+Total S in REF: 3357.0
+Total S in OUT: 2984.0
+Presicion: 0.292895442359
+Recall: 0.260351504319
+F1-score: 0.275666298691
+
+
+
