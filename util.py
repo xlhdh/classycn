@@ -52,7 +52,7 @@ def decode_totext(rawtext, outputs, charstop):
         if charstop: y = y[1:]
         else: y = y[:-1]
         line = ""
-        print x, y, len(x), len(y)
+        #print x, y, len(x), len(y)
         assert len(x) == len(y)
         for j in range(len(x)):
             if y[j][0]:

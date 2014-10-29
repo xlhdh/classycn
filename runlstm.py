@@ -97,7 +97,7 @@ except KeyboardInterrupt:
 li_generate = [util.line_toraw(line) for line in dataset_test]
 dataset = []
 while dataset_test:
-    x, y = util.line_toseq(dataset_test.pop(), charstop)
+    x, y = util.line_toseq(dataset_test.pop(0), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
     print "len(dataset_test)", len(dataset_test)
