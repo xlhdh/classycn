@@ -17,7 +17,7 @@ dictfile = 'data/vector/sjwcbow50.txt'
 dense = False # 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)
-validate_interval = 10000
+validate_interval = 100
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
