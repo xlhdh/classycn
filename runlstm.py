@@ -68,20 +68,14 @@ min_val_loss = float("inf") # very big
 peak = 0
 int_num = 0
 
-print "Making Model..."
 mylstm = lstm.LSTM(n_input=len(dataset_train[0][0][0]),n_output=len(dataset_train[0][1][0]),n_memblock=hidden_size, lr=learning_rate)
 #mylstm.load("m50saving1740")
 
 try:
     while True:
-        print "Shuffling..."
         numpy.random.shuffle(dataset_train)
-        #dt = [dataset_train[x:x+validate_interval] for x in xrange(1, len(dataset_train), validate_interval)]
-        d = dataset_train
-        '''TEMP SOLUTION'''
-        for i in [1,]:
-        #for d in dt:
-            print "Training..."
+        dt = [dataset_train[x:x+validate_interval] for x in xrange(1, len(dataset_train), validate_interval)]
+        for d in dt:
             mylstm.train(d)
             vcost, act, aco, atp, p, r, f = mylstm.test(dataset_validate)
             mylstm.save(modelname + "saving" + str(int_num))
