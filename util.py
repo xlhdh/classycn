@@ -15,9 +15,19 @@ def line_toseq(line, charstop):
     if charstop: return char_stop_toseq(line)
     else: return stop_char_toseq(line)
 
-def make_charset(list_of_sentences):
+def make_charset(list_of_sentences, includefreq):
     li = [line_toraw(line) for line in list_of_sentences]
-    return list(set(list("".join(li))))
+    st = "".join(li)
+    d = {}
+    for u in st:
+        if d.has_key(u):
+            d[u]=d[u]+1
+        else:
+            d[u]=1
+    for u in d.keys():
+        if d[u]<includefreq:
+            del d[u]
+    return d.keys()
 
 def line_toraw(line):
     import re

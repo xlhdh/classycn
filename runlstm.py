@@ -8,7 +8,7 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 10000
+size = 100
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
@@ -37,20 +37,30 @@ li = li[:size]
 
 print "Preparing dictionaries..."
 if dense: vdict = util.lstmvec(dictfile)
-else: charset = util.make_charset(li)
+else: charset = util.make_charset(li,5)
 
 print "Preparing datasets..."
-li_generate = [util.line_toraw(line) for line in li[cut2:]]
+
+dataset_train = li[:cut1]
+dataset_validate = li[cut1:cut2]
+dataset_test = li[cut2:]
 
 dataset = []
-while li:
-    x, y = util.line_toseq(li.pop(), charstop)
+while dataset_train:
+    x, y = util.line_toseq(dataset_train.pop(), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
-    print "len(li)", len(li)
-dataset_train = dataset[:cut1]
-dataset_validate = dataset[cut1:cut2]
-dataset_test = dataset[cut2:]
+    print "len(dataset_train)", len(dataset_train)
+dataset_train = dataset
+
+dataset = []
+while dataset_validate:
+    x, y = util.line_toseq(dataset_validate.pop(), charstop)
+    if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
+    else: dataset.append(util.seq_to_sparsevec(x,y,charset))
+    print "len(dataset_validate)", len(dataset_validate)
+dataset_validate = dataset
+
 
 #sys.exit()
 
@@ -84,7 +94,14 @@ try:
 except KeyboardInterrupt:
     print 'Interrupted by user.'
 
-
+li_generate = [util.line_toraw(line) for line in dataset_test]
+dataset = []
+while dataset_test:
+    x, y = util.line_toseq(dataset_test.pop(), charstop)
+    if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
+    else: dataset.append(util.seq_to_sparsevec(x,y,charset))
+    print "len(dataset_test)", len(dataset_test)
+dataset_test = dataset
 
 #This is the final test.
 print "This is the test for the PEAK value."
@@ -94,7 +111,6 @@ print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", act, "Total in Output:", aco, "T
 print "\t@@VALIDATE ON TEST@@\tP, R, F:", p, r, f
 print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", datetime.datetime.now(), datetime.datetime.now()-starttime
 print "\tpeak =", peak
-
 
 result = util.decode_totext(li_generate, mylstm.generate(dataset_test), charstop)
 for line in result:
