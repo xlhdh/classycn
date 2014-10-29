@@ -47,6 +47,7 @@ while li:
     x, y = util.line_toseq(li.pop(), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
+    print "len(li)", len(li)
 dataset_train = dataset[:cut1]
 dataset_validate = dataset[cut1:cut2]
 dataset_test = dataset[cut2:]
