@@ -162,11 +162,11 @@ class LSTM:
     def train(self, data):
         #dataset = [([[0,0,1],[0,1,0],[1,0,0]],[[1,0],[0,1],[0,0]]),([[0,0,0],[0,1,1],[1,0,0]],[[1,0],[1,1],[0,0]])]
         for ip, gold in data:
-            ips = sparse.basic.csc_from_dense(ip)
-            golds = sparse.basic.csc_from_dense(gold)
-            print ips
-            print golds
-            self.train_function(ips, golds)
+            #ips = sparse.basic.csc_from_dense(ip)
+            #golds = sparse.basic.csc_from_dense(gold)
+            #print ips
+            #print golds
+            self.train_function(ip, gold)
         return
 
     def test(self,data):
