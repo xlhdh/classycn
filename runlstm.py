@@ -37,7 +37,7 @@ li = li[:size]
 
 print "Preparing dictionaries..."
 if dense: vdict = util.lstmvec(dictfile)
-else: charset = util.make_charset(li,5)
+else: charset = util.make_charset(li,7)
 
 print "Preparing datasets..."
 
