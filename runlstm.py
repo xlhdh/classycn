@@ -8,7 +8,7 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 100
+size = 10000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
@@ -17,7 +17,7 @@ dictfile = 'data/vector/sjwcbow50.txt'
 dense = False # 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)
-validate_interval = 100
+validate_interval = 10000
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
