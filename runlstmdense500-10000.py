@@ -16,7 +16,7 @@ cut2 = int(size*(trainportion+validateportion))
 dictfile = 'data/vector/sjwcbow500.txt'
 dense = True# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
-modelname = material.replace('/','').replace('*','')+str(size)+dictfile
+modelname = material.replace('/','').replace('*','')+str(size)+"500"
 validate_interval = 10000
 hidden_size = 50
 learning_rate = 0.001
