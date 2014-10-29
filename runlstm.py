@@ -68,7 +68,7 @@ min_val_loss = float("inf") # very big
 peak = 0
 int_num = 0
 
-mylstm = lstm.LSTM(n_input=len(dataset_test[0][0][0]),n_output=len(dataset_test[0][1][0]),n_memblock=hidden_size, lr=learning_rate)
+mylstm = lstm.LSTM(n_input=len(dataset_train[0][0][0]),n_output=len(dataset_train[0][1][0]),n_memblock=hidden_size, lr=learning_rate)
 #mylstm.load("m50saving1740")
 
 try:

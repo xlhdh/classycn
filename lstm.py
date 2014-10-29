@@ -26,7 +26,7 @@ from theano import sparse
 rng = RandomStreams(seed=numpy.random.randint(1 << 30))
 theano.config.warn.subtensor_merge_bug = False
 #theano.config.compute_test_value = 'warn'
-theano.config.exception_verbosity='high'
+#theano.config.exception_verbosity='high'
 
 def shared_normal(num_rows, num_cols, scale=1, name=None):
     '''Initialize a matrix shared variable with normally distributed elements.'''
@@ -162,11 +162,11 @@ class LSTM:
     def train(self, data):
         #dataset = [([[0,0,1],[0,1,0],[1,0,0]],[[1,0],[0,1],[0,0]]),([[0,0,0],[0,1,1],[1,0,0]],[[1,0],[1,1],[0,0]])]
         for ip, gold in data:
-            print ip
-            print gold
-            #ips = sparse.basic.csc_from_dense(ip)
-            #golds = sparse.basic.csc_from_dense(gold)
-            self.train_function(ip, gold)
+            ips = sparse.basic.csc_from_dense(ip)
+            golds = sparse.basic.csc_from_dense(gold)
+            print ips
+            print golds
+            self.train_function(ips, golds)
         return
 
     def test(self,data):
