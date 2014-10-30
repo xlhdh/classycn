@@ -1,0 +1,2 @@
+cibolo:
+OMP_NUM_THREADS=4 THEANO_FLAGS=blas.ldflags="-L/home/yizhouhu/ob/lib/ -lopenblas" python runlstmdense500-10000.py

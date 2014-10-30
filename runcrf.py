@@ -12,7 +12,7 @@ material = 'data/sjw/*'
 size = 80
 trainportion = 0.9
 dictfile = 'data/vector/vectors300.txt'
-crfmethod = "ap"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
+crfmethod = "l2sgd"  # {‘lbfgs’, ‘l2sgd’, ‘ap’, ‘pa’, ‘arow’}
 charstop = True # True means label attributes to previous char
 features = 3 # 1=discrete; 2=vectors; 3=both
 random.seed(101)
@@ -61,12 +61,13 @@ testdata = data[cut:]
 trainer = pycrfsuite.Trainer()
 #print trainer.params()
 
-while traindata:
-    x, y = traindata.pop()
+for t in traindata:
+    x, y = t
     trainer.append(x, y)
 
 trainer.select(crfmethod)
 trainer.set('max_iterations',100000)
+#trainer.set('delta',0)
 print "!!!!before train", datetime.datetime.now()
 trainer.train(modelname)
 print "!!!!after train", datetime.datetime.now()
@@ -99,8 +100,8 @@ print "*******************F1-score:", 2*p*r/(p+r)
 print datetime.datetime.now()
 print "Start closed testing..."
 results = []
-for t in traindata:
-    x, yref = t
+while traindata:
+    x, yref = traindata.pop()
     yout = tagger.tag(x)
     results.append(util.eval(yref, yout, "S"))
 
