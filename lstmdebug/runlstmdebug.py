@@ -7,13 +7,13 @@ import numpy
 import random
 import sys
 
-material = 'data/sjw/*'
+material = '../classycn/data/sjw/*'
 size = 1000000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
 cut2 = int(size*(trainportion+validateportion))
-dictfile = 'sjwglove50.txt'
+dictfile = '../classycn/data/sjwglove50.txt'
 dense = True# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)+"glove50debug"
