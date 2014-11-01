@@ -1,9 +1,6 @@
 # -*- coding: UTF8 -*-
-import glob
 import os
-import sys
 import math
-import cPickle
 import numpy
 '''
 try:
