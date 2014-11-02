@@ -182,7 +182,7 @@ class LSTM:
             aco = aco + co
             atp = atp + tp
         
-        return numpy.mean(costs), act, aco, atp, atp/aco, atp/act, 2*atp/(aco+act)
+        return numpy.mean(costs), act, aco, atp, atp/aco if aco else 0, atp/act if act else 0, 2*atp/(aco+act) if (aco+act) else 0
     
     def generate(self, data):
         ops = []
