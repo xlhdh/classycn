@@ -78,7 +78,7 @@ try:
         for d in dt:
             mylstm.train(d)
             vcost, act, aco, atp, p, r, f = mylstm.test(dataset_validate)
-            mylstm.save(modelname + "saving" + str(int_num))
+            mylstm.save(modelname + "/saving-" + str(int_num))
             if vcost < min_val_loss:
                 min_val_loss = vcost
                 peak = int_num
@@ -105,7 +105,7 @@ dataset_test = dataset
 
 #This is the final test.
 print "This is the test for the PEAK value."
-mylstm.load(modelname + "saving" + str(peak))
+mylstm.load(modelname + "/saving-" + str(peak))
 testcost, act, aco, atp, p, r, f = mylstm.test(dataset_test)
 print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", testcost
 print "\t@@VALIDATE ON TEST@@\tP, R, F:", p, r, f
