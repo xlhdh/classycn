@@ -53,7 +53,7 @@ while dataset_train:
     x, y = util.line_toseq(dataset_train.pop(), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
-    print "len(dataset_train)", len(dataset_train)
+    if not len(dataset_train)%100: print "len(dataset_train)", len(dataset_train)
 dataset_train = dataset
 
 dataset = []
@@ -61,7 +61,7 @@ while dataset_validate:
     x, y = util.line_toseq(dataset_validate.pop(), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
-    print "len(dataset_validate)", len(dataset_validate)
+    if not len(dataset_validate)%100: print "len(dataset_validate)", len(dataset_validate)
 dataset_validate = dataset
 
 
@@ -108,7 +108,7 @@ while dataset_test:
     x, y = util.line_toseq(dataset_test.pop(0), charstop)
     if dense: dataset.append(util.seq_to_densevec(x, y, vdict))
     else: dataset.append(util.seq_to_sparsevec(x,y,charset))
-    print "len(dataset_test)", len(dataset_test)
+    if not len(dataset_test)%100: print "len(dataset_test)", len(dataset_test)
 dataset_test = dataset
 
 #This is the final test.
@@ -127,7 +127,7 @@ while li:
     x, y = util.line_toseq(generate.pop(0), charstop)
     if dense: dataset_generate.append(util.seq_to_densevec(x, y, vdict))
     else: dataset_generate.append(util.seq_to_sparsevec(x,y,charset))
-    print "len(dataset_generate)", len(dataset_generate)
+    print if not len(dataset_generate)%100: "len(dataset_generate)", len(dataset_generate)
 
 li_generate = [util.line_toraw(line) for line in dataset_generate]
 
