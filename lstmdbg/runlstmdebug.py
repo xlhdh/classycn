@@ -17,6 +17,7 @@ dictfile = '../classycn/data/vector/sjwglove50.txt'
 dense = True# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)+"glove50debug"
+modelname = "glove50debug"
 validate_interval = 1
 hidden_size = 50
 learning_rate = 0.001
@@ -85,7 +86,7 @@ try:
         for d in dt:
             mylstm.train(d)
             vcost, act, aco, atp, p, r, f = mylstm.test(dataset_validate)
-            mylstm.save(modelname + "/saving-" + str(int_num))
+            mylstm.save("/"+modelname + "/saving-" + str(int_num))
             if vcost < min_val_loss:
                 min_val_loss = vcost
                 peak = int_num

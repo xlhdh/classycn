@@ -22,6 +22,7 @@ from theano import sparse
 
 rng = RandomStreams(seed=numpy.random.randint(1 << 30))
 theano.config.warn.subtensor_merge_bug = False
+theano.config.blas.ldflags = "~/OpenBLAS/ -lopenblas"
 #theano.config.compute_test_value = 'warn'
 #theano.config.exception_verbosity='high'
 
