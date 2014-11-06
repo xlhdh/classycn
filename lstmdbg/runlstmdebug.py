@@ -127,7 +127,7 @@ while li:
     x, y = util.line_toseq(generate.pop(0), charstop)
     if dense: dataset_generate.append(util.seq_to_densevec(x, y, vdict))
     else: dataset_generate.append(util.seq_to_sparsevec(x,y,charset))
-    print if not len(dataset_generate)%100: "len(dataset_generate)", len(dataset_generate)
+    if not len(dataset_generate)%100: print "len(dataset_generate)", len(dataset_generate)
 
 li_generate = [util.line_toraw(line) for line in dataset_generate]
 
