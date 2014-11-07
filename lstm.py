@@ -18,6 +18,7 @@ rng = RandomStreams(seed=numpy.random.randint(1 << 30))
 theano.config.warn.subtensor_merge_bug = False
 #theano.config.compute_test_value = 'warn'
 #theano.config.exception_verbosity='high'
+numpy.seterr(all='warn')
 
 def shared_normal(num_rows, num_cols, scale=1, name=None):
     '''Initialize a matrix shared variable with normally distributed elements.'''
