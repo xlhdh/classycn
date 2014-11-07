@@ -123,7 +123,7 @@ while li:
     else: dataset_generate.append(util.seq_to_sparsevec(x,y,charset))
     if not len(dataset_generate)%1000: print "len(dataset_generate)", len(dataset_generate)
 
-li_generate = [util.line_toraw(line) for line in dataset_generate]
+#li_generate = [util.line_toraw(line) for line in dataset_generate]
 
 result = util.decode_totext(li_generate, mylstm.generate(dataset_generate), charstop)
 for line in result:
