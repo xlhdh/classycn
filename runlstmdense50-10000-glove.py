@@ -115,19 +115,16 @@ print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", datetime.datetime.now(), datetim
 print "\tpeak =", peak
 
 generate = [line for line in util.file_to_lines(glob.glob('qualitative/allover-sjw-gold*'))]
-#li_generate = [util.line_toraw(line) for line in generate]
-
 dataset_generate = []
-while generate:
-    x, y = util.line_toseq(generate.pop(0), charstop)
+for line in generate:
+    x, y = util.line_toseq(line, charstop)
     if dense: dataset_generate.append(util.seq_to_densevec(x, y, vdict))
     else: dataset_generate.append(util.seq_to_sparsevec(x,y,charset))
     if not len(dataset_generate)%1000: print "len(dataset_generate)", len(dataset_generate)
 
+generate = [util.line_toraw(line) for line in generate]
 
-result = util.decode_totext(dataset_generate, mylstm.generate(dataset_generate), charstop)
+result = util.decode_totext(generate, mylstm.generate(dataset_generate), charstop)
 for line in result:
     print line.encode('utf8')
-
-
 
