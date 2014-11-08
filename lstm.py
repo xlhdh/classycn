@@ -117,9 +117,13 @@ class LSTM:
                                                            outputs_info = [init_mem, None],
                                                            go_backwards=True)
         output_sequenceb = output_sequenceb[::-1]
-        output_sequence, train_updates = theano.scan(fn=lambda x, y: sig(x + y + bo),
+        presig_output_sequence, train_updates = theano.scan(fn=lambda x, y: (x + y + bo),
                                                       sequences = [output_sequencef, output_sequenceb],
                                                       outputs_info=[None])
+        
+        # avoid log(0) for log(scan(sigmoid()))
+        output_sequence = sig(presig_output_sequence)        
+        
         train_updates.update(updf)
         train_updates.update(updb)
         # output_sequence become a batch of output vectors
