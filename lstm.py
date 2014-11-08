@@ -18,7 +18,7 @@ rng = RandomStreams(seed=numpy.random.randint(1 << 30))
 theano.config.warn.subtensor_merge_bug = False
 #theano.config.compute_test_value = 'warn'
 #theano.config.exception_verbosity='high'
-numpy.seterr(all='print')
+numpy.seterr(all='warn')
 
 def shared_normal(num_rows, num_cols, scale=1, name=None):
     '''Initialize a matrix shared variable with normally distributed elements.'''
@@ -117,14 +117,9 @@ class LSTM:
                                                            outputs_info = [init_mem, None],
                                                            go_backwards=True)
         output_sequenceb = output_sequenceb[::-1]
-        presig_output_sequence, train_updates = theano.scan(fn=lambda x, y: (x + y + bo),
+        output_sequence, train_updates = theano.scan(fn=lambda x, y: sig(x + y + bo),
                                                       sequences = [output_sequencef, output_sequenceb],
-                                                      non_sequences=bo,
                                                       outputs_info=[None])
-                                                      
-        # avoid log(0)
-        output_sequence = sig(presig_output_sequence)
-        
         train_updates.update(updf)
         train_updates.update(updb)
         # output_sequence become a batch of output vectors
