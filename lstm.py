@@ -120,7 +120,7 @@ class LSTM:
         presig_output_sequence, train_updates = theano.scan(fn=lambda x, y: (x + y + bo),
                                                       sequences = [output_sequencef, output_sequenceb],
                                                       non_sequences=bo,
-                                                      outputs_info=[None])
+                                                      outputs_info=[None,])
                                                       
         # avoid log(0)
         output_sequence = sig(presig_output_sequence)
