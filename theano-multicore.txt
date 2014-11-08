@@ -1,2 +1,4 @@
 cibolo:
 OMP_NUM_THREADS=4 THEANO_FLAGS=blas.ldflags="-L/home/yizhouhu/ob/lib/ -lopenblas" python runlstmdense500-10000.py
+
+optimizer_including=local_hard_sigmoid THEANO_FLAGS=blas.ldflags="-L/home/yizhouhu/ob/lib/ -lopenblas" python runlstmdense50-10000.py
