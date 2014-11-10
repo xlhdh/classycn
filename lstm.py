@@ -15,9 +15,10 @@ from theano import sparse
 #numpy.random.seed(0xbeef)
 
 rng = RandomStreams(seed=numpy.random.randint(1 << 30))
-theano.config.warn.subtensor_merge_bug = False
-#theano.config.compute_test_value = 'warn'
-#theano.config.exception_verbosity='high'
+#theano.config.warn.subtensor_merge_bug = False
+#theano.config.compute_test_value = 'raise'
+theano.config.exception_verbosity='high'
+#theano.config.optimizer='None'
 numpy.seterr(all='warn')
 
 def shared_normal(num_rows, num_cols, scale=1, name=None):
@@ -31,7 +32,7 @@ def shared_zeros(*shape):
 class LSTM:
     # Sig is 0/1, Tanh is -1/1
 
-    def __init__(self, n_input=3, n_memblock=100, n_output=2, lr=0.0001, m=0.9):
+    def __init__(self, n_input=3, n_memblock=100, n_output=2, lr=0.0001, m=0.9, l2rate=0.0001):
         input_sequence = T.matrix()
         gold_sequence = T.matrix() # 1, n_output
         
@@ -60,10 +61,11 @@ class LSTM:
         
         wmo = shared_normal(n_memblock, n_output, 0.01,"wmo0"),shared_normal(n_memblock, n_output, 0.01,"wmo1") # Weight from input to mem
         
+        slo = theano.shared(numpy.random.normal(scale = 0.01), name="slo0"), theano.shared(numpy.random.normal(scale = 0.01), name="slo1")
         bo = theano.shared(numpy.zeros(n_output, dtype=theano.config.floatX),"bo") # Bias from input to mem
         ''' END OF WEIGHTS '''
         
-        self.params = wiig[0], big[0], wifg[0], bfg[0], wiog[0], bog[0], wmig[0], wmfg[0], wmog[0], wim[0], bm[0], wmo[0], wiig[1], big[1], wifg[1], bfg[1], wiog[1], bog[1], wmig[1], wmfg[1], wmog[1], wim[1], bm[1], wmo[1], bo
+        self.params = wiig[0], wiig[1], big[0], big[1], wifg[0], wifg[1], bfg[0], bfg[1], wiog[0], wiog[1], bog[0], bog[1], wmig[0], wmig[1], wmfg[0], wmfg[1], wmog[0], wmog[1], wim[0], wim[1], bm[0], bm[1], wmo[0], wmo[1], slo[0], slo[1], bo
         
         ''' START DELTAS - 0=forward; 1=backward'''
         dwiig = shared_normal(n_input, n_memblock, 0.01,"dwiig0"),shared_normal(n_input, n_memblock, 0.01,"dwiig1") # Weights from inputs to gates
@@ -87,49 +89,46 @@ class LSTM:
         
         dwmo = shared_normal(n_memblock, n_output, 0.01,"dwmo0"),shared_normal(n_memblock, n_output, 0.01,"dwmo1") # Weight from input to mem
         
+        dslo = theano.shared(numpy.random.normal(scale = 0.01), name="dslo0"), theano.shared(numpy.random.normal(scale = 0.01), name="dslo1")
+        
         dbo = theano.shared(numpy.zeros(n_output, dtype=theano.config.floatX),"dbo") # Bias from input to mem
         ''' END OF DELTAS '''
         
-        self.deltas = dwiig[0], dbig[0], dwifg[0], dbfg[0], dwiog[0], dbog[0], dwmig[0], dwmfg[0], dwmog[0], dwim[0], dbm[0], dwmo[0], dwiig[1], dbig[1], dwifg[1], dbfg[1], dwiog[1], dbog[1], dwmig[1], dwmfg[1], dwmog[1], dwim[1], dbm[1], dwmo[1], dbo
-        
+        self.deltas = dwiig[0], dwiig[1], dbig[0], dbig[1], dwifg[0], dwifg[1], dbfg[0], dbfg[1], dwiog[0], dwiog[1], dbog[0], dbog[1], dwmig[0], dwmig[1], dwmfg[0], dwmfg[1], dwmog[0], dwmog[1], dwim[0], dwim[1], dbm[0], dbm[1], dwmo[0], dwmo[1], dslo[0], dslo[1], dbo
         
         init_mem = shared_zeros(n_memblock)
         
         # EXPRESSIONS - Forward
         def recurrence(input, pmem, i):
             i = i.value
-            ingate = sig(T.dot(input, wiig[i]) + T.dot(pmem, wmig[i]) + big[i])
-            forgate = sig(T.dot(input, wifg[i]) + T.dot(pmem, wmfg[i]) + bfg[i])
-            mem = forgate * pmem + ingate * T.tanh(T.dot(input, wim[i]) + bm[i]) # Use sig or tan???
-            outgate = sig(T.dot(input, wiog[i]) + T.dot(mem, wmog[i]) + bog[i])
-            layerout = T.dot(outgate * mem, wmo[i])
-            #output = sig(T.dot(outgate * mem, wmo) + bo)
+            ingate   = sig(T.dot(input, wiig[i]) + T.dot(pmem, wmig[i]) + big[i])
+            forgate  = sig(T.dot(input, wifg[i]) + T.dot(pmem, wmfg[i]) + bfg[i])
+            #mem      = forgate * pmem            + ingate * T.tanh(T.dot(input, wim[i]) + bm[i]) # Use sig or tan???
+            mem      = T.tanh(forgate * pmem + ingate * T.tanh(T.dot(input, wim[i]) + bm[i])) # instead of identity, use tanh for mem out
+            outgate  = sig(T.dot(input, wiog[i]) + T.dot(mem, wmog[i])  + bog[i])
+            layerout = T.tanh(T.dot(outgate * mem, wmo[i]))
+            #print layerout.shape.eval()
             return mem, layerout
         
         #Forward Pass
-        (mem_sequencef, output_sequencef), updf = theano.scan(fn=recurrence,
-                                                           sequences = input_sequence,
-                                                           non_sequences = 0,
-                                                           outputs_info = [init_mem, None])
-        (mem_sequenceb, output_sequenceb), updb = theano.scan(fn=recurrence,
-                                                           sequences = input_sequence,
-                                                           non_sequences = 1,
-                                                           outputs_info = [init_mem, None],
-                                                           go_backwards=True)
-        output_sequenceb = output_sequenceb[::-1]
-        presig_output_sequence, train_updates = theano.scan(fn=lambda x, y: (x + y + bo),
-                                                      sequences = [output_sequencef, output_sequenceb],
-                                                      outputs_info=[None])
+        (_, output_sequencef), updf = theano.scan(fn=recurrence, sequences = input_sequence, non_sequences = 0, outputs_info = [init_mem, None])
+        (_, output_sequencebp), updb = theano.scan(fn=recurrence, sequences = input_sequence, non_sequences = 1, outputs_info = [init_mem, None], go_backwards=True)
+        output_sequenceb = output_sequencebp[::-1]
+        
+        presig_output_sequence, train_updates = theano.scan(fn=lambda x, y: (x*slo[0]+y*slo[1]+bo), sequences = [output_sequencef, output_sequenceb], outputs_info=[None])
         
         # avoid log(0) for log(scan(sigmoid()))
-        output_sequence = sig(presig_output_sequence)        
-        
+        output_sequence = sig(presig_output_sequence)
+        # output_sequence become a batch of output vectors
         train_updates.update(updf)
         train_updates.update(updb)
-        # output_sequence become a batch of output vectors
+        
+        l2 = 0
+        for p in self.params:
+            l2 += T.sum(p*p)
         
         # Loss Function
-        outloss = T.nnet.binary_crossentropy(output_sequence, gold_sequence).mean() # TODO: check if the dimensions match here
+        outloss = T.nnet.binary_crossentropy(output_sequence, gold_sequence).mean() + l2*l2rate # TODO: check if the dimensions match here
         # consider using multi-category? because binary allows multiple 1's in the vector
     
         # Backward Pass
