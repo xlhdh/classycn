@@ -10,7 +10,7 @@ data/24s - semi - cleaned data from the "Twenty-Four Histories" of China, except
 data/vectors - word vectors produced using GloVe & Word2Vec. 
 
 2. Scripts
-3. 
+
 runhmm - trains and tests an HMM tagger from NLTK
 
 runcrf - trains and tests a CRF tagger from CRF Suite
