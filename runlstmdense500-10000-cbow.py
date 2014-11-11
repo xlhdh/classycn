@@ -8,16 +8,16 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 1000000
+size = 10000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
 cut2 = int(size*(trainportion+validateportion))
-dictfile = 'data/vector/sjwglove50.txt'
+dictfile = 'data/vector/sjwcbow500.txt'
 dense = True# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
-modelname = material.replace('/','').replace('*','')+str(size)+"glove50"
-validate_interval = 100000
+modelname = material.replace('/','').replace('*','')+str(size)+"cbow500"
+validate_interval = 10000
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
@@ -114,20 +114,17 @@ print "\t@@VALIDATE ON TEST@@\tP, R, F:", p, r, f
 print "\t@@VALIDATE ON TEST@@\tTotal in Gold:", datetime.datetime.now(), datetime.datetime.now()-starttime
 print "\tpeak =", peak
 
-generate = [line for line in util.file_to_lines(glob.glob('qualitative/allover-sjw-gold.*'))]
-
+generate = [line for line in util.file_to_lines(glob.glob('qualitative/allover-sjw-gold*'))]
 dataset_generate = []
-while li:
-    x, y = util.line_toseq(generate.pop(0), charstop)
+for line in generate:
+    x, y = util.line_toseq(line, charstop)
     if dense: dataset_generate.append(util.seq_to_densevec(x, y, vdict))
     else: dataset_generate.append(util.seq_to_sparsevec(x,y,charset))
     if not len(dataset_generate)%1000: print "len(dataset_generate)", len(dataset_generate)
 
-#li_generate = [util.line_toraw(line) for line in dataset_generate]
+generate = [util.line_toraw(line) for line in generate]
 
-result = util.decode_totext(li_generate, mylstm.generate(dataset_generate), charstop)
+result = util.decode_totext(generate, mylstm.generate(dataset_generate), charstop)
 for line in result:
     print line.encode('utf8')
-
-
 
