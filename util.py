@@ -93,8 +93,11 @@ def seq_to_densevec(x, y, mydict):
         if l == 'N': vec = [0]
         else: vec = [1]
         yseq.append(vec)
+
+    from scipy.sparse import csr_matrix
+
     
-    return xseq, yseq
+    return csr_matrix(xseq), csr_matrix(yseq)
 
 
 def char_stop_toseq(line):
