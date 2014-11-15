@@ -17,7 +17,7 @@ dictfile = 'data/vector/sjwcbow50.txt'
 dense = False# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)+"sparse"
-validate_interval = 10000
+validate_interval = 1000
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
@@ -73,7 +73,7 @@ print "Making LSTM..."
 #print dataset_train[0][0][0].shape
 if dense: i,o = len(dataset_train[0][0][0]),len(dataset_train[0][1][0])
 else: i,o = dataset_train[0][0].shape[1],dataset_train[0][1].shape[1]
-mylstm = lstm.LSTM(n_input=i, n_output=o, n_memblock=hidden_size, lr=learning_rate)
+mylstm = lstm.LSTM(n_input=i, n_output=o, n_memblock=hidden_size, lr=learning_rate, dense=dense)
 #mylstm.load("m50saving1740")
 
 print "Start Training... "
@@ -82,7 +82,7 @@ try:
         numpy.random.shuffle(dataset_train)
         dt = [dataset_train[x:x+validate_interval] for x in xrange(1, len(dataset_train), validate_interval)]
         for d in dt:
-            mylstm.train(d, dense)
+            mylstm.train(d)
             vcost, act, aco, atp, p, r, f = mylstm.test(dataset_validate)
             mylstm.save(modelname + "/saving-" + str(int_num))
             if vcost < min_val_loss:
