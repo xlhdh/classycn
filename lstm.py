@@ -32,7 +32,8 @@ def shared_zeros(*shape):
 class LSTM:
     # Sig is 0/1, Tanh is -1/1
 
-    def __init__(self, n_input=3, n_memblock=100, n_output=2, lr=0.0001, m=0.9, l2rate=0.0001):
+    def __init__(self, n_input=3, n_memblock=100, n_output=2, lr=0.0001, m=0.9, l2rate=0.0001, dense=True):
+        self.dense = dense
         input_sequence = T.matrix()
         gold_sequence = T.matrix() # 1, n_output
         
@@ -154,14 +155,10 @@ class LSTM:
         self.generate_function = theano.function([input_sequence], output)
     
     
-    def train(self, data, dense=True):
+    def train(self, data):
         #dataset = [([[0,0,1],[0,1,0],[1,0,0]],[[1,0],[0,1],[0,0]]),([[0,0,0],[0,1,1],[1,0,0]],[[1,0],[1,1],[0,0]])]
         for ip, gold in data:
-            #ips = sparse.basic.csc_from_dense(ip)
-            #golds = sparse.basic.csc_from_dense(gold)
-            #print ips
-            #print golds
-            if not dense: ip, gold = ip.todense(), gold.todense()
+            if not self.dense: ip, gold = ip.todense(), gold.todense()
             self.train_function(ip, gold)
         return
 
@@ -171,11 +168,8 @@ class LSTM:
         atp = 0.0
         costs = []
         for ip, gold in data:
-            #ips = sparse.basic.csc_from_dense(ip)
-            #golds = sparse.basic.csc_from_dense(gold)
-            
+            if not self.dense: ip, gold = ip.todense(), gold.todense()
             cost, ct, co, tp = self.test_function(ip, gold)
-            
             costs.append(cost)
             act = act + ct
             aco = aco + co
@@ -186,7 +180,7 @@ class LSTM:
     def generate(self, data):
         ops = []
         for ip, gold in data:
-            #ips = sparse.basic.csc_from_dense(ip)
+            if not self.dense: ip, gold = ip.todense(), gold.todense()
             op = self.generate_function(ip)
             ops.append(op)
         return ops
