@@ -65,6 +65,8 @@ def decode_totext(rawtext, outputs, charstop):
 
 def seq_to_sparsevec(x,y,charset):
     #input: x, y: [char,...], [label,...]
+    from scipy.sparse import csr_matrix
+
     xseq = []
     for c in x:
         vec = [0] * len(charset)
@@ -77,7 +79,10 @@ def seq_to_sparsevec(x,y,charset):
         else: vec = [1]
         yseq.append(vec)
 
-    return xseq, yseq
+        #print "hi"
+    #print xseq.nbytes, yseq.nbytes
+    #print csr_matrix(xseq).nbytes, csr_matrix(yseq).nbytes
+    return csr_matrix(xseq), csr_matrix(yseq)
 
 def seq_to_densevec(x, y, mydict):
     #xseq = [mydict.get(c, default=mydict["zero"]) for c in x]
@@ -94,10 +99,7 @@ def seq_to_densevec(x, y, mydict):
         else: vec = [1]
         yseq.append(vec)
 
-    from scipy.sparse import csr_matrix
-
-    
-    return csr_matrix(xseq), csr_matrix(yseq)
+    return xseq, yseq
 
 
 def char_stop_toseq(line):

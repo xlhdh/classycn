@@ -13,7 +13,7 @@ trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
 cut2 = int(size*(trainportion+validateportion))
-dictfile = 'data/vector/sjwcbow500.txt'
+dictfile = 'data/vector/sjwcbow50.txt'
 dense = False# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
 modelname = material.replace('/','').replace('*','')+str(size)+"sparse"
@@ -37,7 +37,7 @@ li = li[:size]
 
 print "Preparing dictionaries..."
 if dense: vdict = util.lstmvec(dictfile)
-else: charset = util.make_charset(li,7)
+else: charset = util.make_charset(li,3)
 
 print "Preparing datasets..."
 
@@ -69,7 +69,11 @@ peak = 0
 int_num = 0
 
 print "Making LSTM..."
-mylstm = lstm.LSTM(n_input=len(dataset_train[0][0][0]),n_output=len(dataset_train[0][1][0]),n_memblock=hidden_size, lr=learning_rate)
+#print dataset_train[0][0].shape
+#print dataset_train[0][0][0].shape
+if dense: i,o = len(dataset_train[0][0][0]),len(dataset_train[0][1][0])
+else: i,o = dataset_train[0][0].shape[1],dataset_train[0][1].shape[1]
+mylstm = lstm.LSTM(n_input=i, n_output=o, n_memblock=hidden_size, lr=learning_rate)
 #mylstm.load("m50saving1740")
 
 print "Start Training... "
@@ -78,7 +82,7 @@ try:
         numpy.random.shuffle(dataset_train)
         dt = [dataset_train[x:x+validate_interval] for x in xrange(1, len(dataset_train), validate_interval)]
         for d in dt:
-            mylstm.train(d)
+            mylstm.train(d, dense)
             vcost, act, aco, atp, p, r, f = mylstm.test(dataset_validate)
             mylstm.save(modelname + "/saving-" + str(int_num))
             if vcost < min_val_loss:

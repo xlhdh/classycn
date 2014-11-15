@@ -154,13 +154,14 @@ class LSTM:
         self.generate_function = theano.function([input_sequence], output)
     
     
-    def train(self, data):
+    def train(self, data, dense=True):
         #dataset = [([[0,0,1],[0,1,0],[1,0,0]],[[1,0],[0,1],[0,0]]),([[0,0,0],[0,1,1],[1,0,0]],[[1,0],[1,1],[0,0]])]
         for ip, gold in data:
             #ips = sparse.basic.csc_from_dense(ip)
             #golds = sparse.basic.csc_from_dense(gold)
             #print ips
             #print golds
+            if not dense: ip, gold = ip.todense(), gold.todense()
             self.train_function(ip, gold)
         return
 
