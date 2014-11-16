@@ -34,8 +34,13 @@ class LSTM:
 
     def __init__(self, n_input=3, n_memblock=100, n_output=2, lr=0.0001, m=0.9, l2rate=0.0001, dense=True):
         self.dense = dense
-        input_sequence = T.matrix()
-        gold_sequence = T.matrix() # 1, n_output
+        
+        if dense:
+            input_sequence = T.matrix()
+            gold_sequence = T.matrix() # 1, n_output
+        else:
+            input_sequence = sparse.csr_matrix()
+            gold_sequence = sparse.csr_matrix() # 1, n_output
         
         #input_sequence.tag.test_value = [[0,0,1],[0,1,0],[1,0,0]]
         #gold_sequence.tag.test_value = [[1,0],[0,1],[0,0]]
@@ -158,7 +163,7 @@ class LSTM:
     def train(self, data):
         #dataset = [([[0,0,1],[0,1,0],[1,0,0]],[[1,0],[0,1],[0,0]]),([[0,0,0],[0,1,1],[1,0,0]],[[1,0],[1,1],[0,0]])]
         for ip, gold in data:
-            if not self.dense: ip, gold = ip.todense(), gold.todense()
+            #if not self.dense: ip, gold = ip.todense(), gold.todense()
             self.train_function(ip, gold)
         return
 
@@ -168,7 +173,7 @@ class LSTM:
         atp = 0.0
         costs = []
         for ip, gold in data:
-            if not self.dense: ip, gold = ip.todense(), gold.todense()
+            #if not self.dense: ip, gold = ip.todense(), gold.todense()
             cost, ct, co, tp = self.test_function(ip, gold)
             costs.append(cost)
             act = act + ct
@@ -180,7 +185,7 @@ class LSTM:
     def generate(self, data):
         ops = []
         for ip, gold in data:
-            if not self.dense: ip, gold = ip.todense(), gold.todense()
+            #if not self.dense: ip, gold = ip.todense(), gold.todense()
             op = self.generate_function(ip)
             ops.append(op)
         return ops
