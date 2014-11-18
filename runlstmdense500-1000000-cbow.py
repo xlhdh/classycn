@@ -8,7 +8,7 @@ import random
 import sys
 
 material = 'data/sjw/*'
-size = 10000
+size = 1000000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
@@ -88,11 +88,16 @@ try:
             print int_num, "@@VALIDATE ON VALIDATE@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", vcost
             print int_num, "@@VALIDATE ON VALIDATE@@\t", "P, R, F:", p, r, f
             print int_num, "@@VALIDATE ON VALIDATE@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
+            tcost, act, aco, atp, p, r, f = mylstm.test(d[:100])
+            print int_num, "\t\t@@VALIDATE ON TRAIN-100@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", vcost
+            print int_num, "\t\t@@VALIDATE ON TRAIN-100@@\t", "P, R, F:", p, r, f
+            print int_num, "\t\t@@VALIDATE ON TRAIN-100@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
+        
         #print "Sample value: ", mylstm.generate([dt[0],])
-        tcost, act, aco, atp, p, r, f = mylstm.test(dataset_train[:100])
-        print "\t@@VALIDATE ON TRAIN-100@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", tcost
-        print "\t@@VALIDATE ON TRAIN-100@@\tP, R, F:", p, r, f
-        print "\t@@VALIDATE ON TRAIN-100@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
+        tcost, act, aco, atp, p, r, f = mylstm.test(dataset_train[:10000])
+        print "\t@@VALIDATE ON TRAIN-10000@@\tTotal in Gold:", act, "Total in Output:", aco, "True Positive:", atp, "Loss:", tcost
+        print "\t@@VALIDATE ON TRAIN-10000@@\tP, R, F:", p, r, f
+        print "\t@@VALIDATE ON TRAIN-10000@@\t", datetime.datetime.now(), datetime.datetime.now()-starttime
 except KeyboardInterrupt:
     print 'Interrupted by user.'
 
