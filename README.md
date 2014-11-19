@@ -17,4 +17,4 @@ runcrf - trains and tests a CRF tagger from CRF Suite
 
 runlstm - trains and tests a bi-directional LSTM tagger. Implemented with Theano. 
 
-Contact: Yizhou Hu @ huyz725 at gmail.com
+Contact: Yizhou Hu @ huyz725+github at gmail.com
