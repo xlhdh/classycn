@@ -7,8 +7,23 @@ import numpy
 import random
 import sys
 
+## Trick for flushing stdout (if script is used with tee)
+# https://github.com/pascanur/trainingRNNs/blob/master/RNN.py
+class Unbuffered:
+    def __init__(self, stream):
+        self.stream = stream
+    def write(self,data):
+        self.stream.write(data)
+        self.stream.flush()
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+sys.stdout=Unbuffered(sys.stdout)
+## end trick
+
+
 material = 'data/sjw/*'
-size = 10000
+size = 1000000
 trainportion = 0.9
 validateportion = 0.05
 cut1 = int(size*trainportion)
@@ -16,8 +31,8 @@ cut2 = int(size*(trainportion+validateportion))
 dictfile = 'data/vector/sjwcbow50.txt'
 dense = False# 1 = dense, 0 = one-hot sparse
 charstop = True # True means label attributes to previous char
-modelname = material.replace('/','').replace('*','')+str(size)+"sparse"
-validate_interval = 1000
+modelname = material.replace('/','').replace('*','')+str(size)+"sparse-x"
+validate_interval = 10000
 hidden_size = 50
 learning_rate = 0.001
 random.seed(101)
